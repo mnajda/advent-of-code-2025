@@ -1,11 +1,7 @@
 use std::env;
 use std::fs;
 
-#[derive(Debug)]
-struct Range {
-    start: usize,
-    end: usize,
-}
+type Range = std::ops::Range<usize>;
 
 fn load_file(path: &String) -> Vec<Range> {
     let contents = fs::read_to_string(path).expect("Error reading file");
@@ -25,7 +21,7 @@ fn load_file(path: &String) -> Vec<Range> {
         .collect()
 }
 
-fn filter_part1(num_str: &String) -> bool {
+fn repeats_exactly_twice(num_str: &String) -> bool {
     let length = num_str.len();
     if (length % 2) != 0 {
         return false;
@@ -33,12 +29,11 @@ fn filter_part1(num_str: &String) -> bool {
     num_str[..(length / 2)] == num_str[(length / 2)..]
 }
 
-fn filter_part2(num_str: &String) -> bool {
+fn repeats_at_least_twice(num_str: &String) -> bool {
     for i in 1..num_str.len() {
         let is_invalid = num_str
             .as_bytes()
             .chunks(i)
-            .into_iter()
             .collect::<Vec<&[u8]>>()
             .windows(2)
             .all(|w| w[0] == w[1]);
@@ -51,11 +46,11 @@ fn filter_part2(num_str: &String) -> bool {
     false
 }
 
-fn get_invalid_in_range(range: &Range, filter: fn(&String) -> bool) -> Vec<usize> {
+fn get_in_range(range: &Range, condition: fn(&String) -> bool) -> Vec<usize> {
     (range.start..=range.end)
         .into_iter()
         .map(|num| num.to_string())
-        .filter(filter)
+        .filter(condition)
         .map(|num_str| num_str.parse::<usize>().unwrap())
         .collect()
 }
@@ -63,7 +58,7 @@ fn get_invalid_in_range(range: &Range, filter: fn(&String) -> bool) -> Vec<usize
 fn part1(input: &Vec<Range>) -> usize {
     input
         .iter()
-        .map(|range| get_invalid_in_range(range, filter_part1))
+        .map(|range| get_in_range(range, repeats_exactly_twice))
         .flatten()
         .sum()
 }
@@ -71,7 +66,7 @@ fn part1(input: &Vec<Range>) -> usize {
 fn part2(input: &Vec<Range>) -> usize {
     input
         .iter()
-        .map(|range| get_invalid_in_range(range, filter_part2))
+        .map(|range| get_in_range(range, repeats_at_least_twice))
         .flatten()
         .sum()
 }
