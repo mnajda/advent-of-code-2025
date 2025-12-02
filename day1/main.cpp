@@ -86,7 +86,6 @@ void Part1(const std::vector<Rotation>& input)
         {
             ++result;
         }
-
     }
 
     std::cout << "Part 1 solution is " << result << '\n';
@@ -99,26 +98,20 @@ void Part2(const std::vector<Rotation>& input)
 
     for (const auto& rotation : input)
     {
-        if (rotation.type == Rotation::Type::Left)
+        for (auto i = rotation.distance; i > 0; --i)
         {
-            for (auto i = rotation.distance; i > 0; --i)
+            if (rotation.type == Rotation::Type::Left)
             {
                 dial = (dial - 1) % 100;
-                if (dial == 0)
-                {
-                    ++result;
-                }
             }
-        }
-        else
-        {
-            for (auto i = rotation.distance; i > 0; --i)
+            else
             {
                 dial = (dial + 1) % 100;
-                if (dial == 0)
-                {
-                    ++result;
-                }
+            }
+
+            if (dial == 0)
+            {
+                ++result;
             }
         }
     }
