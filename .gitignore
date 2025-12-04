@@ -2,5 +2,7 @@ build/
 .vscode/
 .cache/
 target/
+.zig-cache/
+zig-out/
 input/
 input.txt
