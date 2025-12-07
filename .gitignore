@@ -4,5 +4,6 @@ build/
 target/
 .zig-cache/
 zig-out/
+node_modules/
 input/
 input.txt
